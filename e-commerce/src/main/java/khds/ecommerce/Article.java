@@ -8,22 +8,32 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Date;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "article_table")
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
     @Column(name = "title")
-    private final String title;
+    private String title;
 
     @Column(name = "content")
-    private final String content;
+    private String content;
 
     @Column(name = "create_date")
-    private final Date newDate;
+    private Date newDate;
+
+    public Article(String title, String content, Date newDate) {
+        this.title = title;
+        this.content = content;
+        this.newDate = newDate;
+    }
 }
