@@ -5,7 +5,6 @@ import java.util.List;
 import khds.ecommerce.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,15 +15,21 @@ public class TestController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/create")
-    public String test(@RequestParam("title") String title, @RequestParam("content") String content){
+    public String test1(@RequestParam("title") String title, @RequestParam("content") String content){
         Article article = new Article(title, content, new Date());
         articleRepository.save(article);
         return "success";
     }
 
-    @GetMapping("/products")
+    @GetMapping("/find")
     public Article test2(){
         List<Article> article = articleRepository.findAll();
         return article.get(0);
+    }
+
+    @GetMapping("/find2")
+    public List<Article> test3(){
+        List<Article> articles = articleRepository.findByTitleUnder10();
+        return articles;
     }
 }
