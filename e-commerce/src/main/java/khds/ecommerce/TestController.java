@@ -32,4 +32,10 @@ public class TestController {
         List<Article> articles = articleRepository.findByTitleUnder10();
         return articles;
     }
+
+    @GetMapping("/find3")
+    public List<ArticleJPAResponse> test4(){
+        List<ArticleJPAResponse> articles = articleRepository.findDtoByTitleUnder10();
+        return articles;
+    }
 }
