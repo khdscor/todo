@@ -1,4 +1,4 @@
-package khds.ecommerce.chatting;
+package khds.ecommerce.chatting.webSocket;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;

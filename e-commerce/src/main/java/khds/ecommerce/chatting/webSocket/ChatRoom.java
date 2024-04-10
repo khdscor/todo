@@ -1,4 +1,4 @@
-package khds.ecommerce.chatting;
+package khds.ecommerce.chatting.webSocket;
 
 import java.util.HashSet;
 import java.util.Set;

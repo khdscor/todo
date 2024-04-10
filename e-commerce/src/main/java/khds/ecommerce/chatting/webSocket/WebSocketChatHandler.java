@@ -1,4 +1,4 @@
-package khds.ecommerce.chatting;
+package khds.ecommerce.chatting.webSocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
