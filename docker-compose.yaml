@@ -12,7 +12,8 @@ services:
     env_file: ./e-commerce/.env
     ports:
       - "3306:3306"
-  e-commerce:
+    restart: always
+  backend:
     image: e-commerce:0.0.1-SNAPSHOT
     networks:
       - khds_network
@@ -26,17 +27,33 @@ services:
       - SPRING_DATASOURCE_PASSWORD=mysqlpw
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+    restart: always
   frontend:
     depends_on:
-      - e-commerce
+      - backend
     build:
       context: ./my-app
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "80:3000"
+      - "3000:3000"
     networks:
       - khds_network
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    networks:
+      - khds_network
+    restart: always
+    volumes:
+      - ./conf/:/etc/nginx/conf.d
+      - /data/certbot/conf:/etc/letsencrypt
+      - /data/certbot/www:/var/www/certbot
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
 
 networks:
   khds_network:
