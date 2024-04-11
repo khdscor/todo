@@ -6,6 +6,7 @@ feat#2
 1. jpa with querydsl
 2. flyway
 3. docker, mysql, workbench, docker-compose
+4. nginx, react, springboot with docker
 
 feat#2
 1. gitlab ci/cd, aws 배포
@@ -15,3 +16,5 @@ feat#2
 
 feat#3
 1. WebSocket을 이용한 채팅서버 구현
+2. Stomp 사용
+3. mongoDB(채팅내용), mysql(채팅방 유지)
