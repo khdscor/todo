@@ -1,14 +1,15 @@
 version: '3'
+name: test
 services:
   mysql:
     image: mysql:8.0.34
     networks:
       - khds_network
     volumes:
-      - ./db/conf.d:/etc/mysql/conf.d
-      - ./db/data:/var/lib/mysql
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
-    env_file: .env
+      - ./e-commerce/db/conf.d:/etc/mysql/conf.d
+      - ./e-commerce/db/data:/var/lib/mysql
+      - ./e-commerce/db/initdb.d:/docker-entrypoint-initdb.d
+    env_file: ./e-commerce/.env
     ports:
       - "3306:3306"
   e-commerce:
@@ -16,7 +17,7 @@ services:
     networks:
       - khds_network
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       - mysql
     environment:
