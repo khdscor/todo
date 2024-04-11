@@ -26,6 +26,18 @@ services:
       - SPRING_DATASOURCE_PASSWORD=mysqlpw
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+  frontend:
+    depends_on:
+      - e-commerce
+    build:
+      context: ./my-app
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "80:3000"
+    networks:
+      - khds_network
+
 networks:
   khds_network:
     driver: bridge
