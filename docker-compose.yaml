@@ -14,7 +14,10 @@ services:
       - "3306:3306"
     restart: always
   backend:
-    image: e-commerce:0.0.1-SNAPSHOT
+    build:
+      context: ./e-commerce
+      dockerfile: Dockerfile
+    container_name: backend
     networks:
       - khds_network
     ports:
