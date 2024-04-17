@@ -18,3 +18,6 @@ feat#3
 1. WebSocket을 이용한 채팅서버 구현
 2. Stomp 사용
 3. mongoDB(채팅내용), mysql(채팅방 유지)
+
+feat#4
+1. mongoDB 연결 및 save, find
