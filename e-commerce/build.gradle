@@ -32,8 +32,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
 //	runtimeOnly 'com.mysql:mysql-connector-j'
-//	implementation 'org.flywaydb:flyway-core'
-//	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+
+	//mongoDB
+	implementation ('org.springframework.boot:spring-boot-starter-data-mongodb')
 
 	// QueryDSL
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
