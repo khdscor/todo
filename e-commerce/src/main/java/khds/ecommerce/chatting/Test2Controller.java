@@ -12,9 +12,9 @@ public class Test2Controller {
 
     @GetMapping("/test")
     public ChattingContent test() {
-//        ChattingContent content = new ChattingContent(1L,1L,"writer","content","2021-09-01");
-//        testRepository.save(content);
-        ChattingContent content = testRepository.findChattingContentByName("test");
-        return content;
+        ChattingContent content = new ChattingContent("writer",14L);
+
+//        ChattingContent content = testRepository.findChattingContentByName("test");
+        return testRepository.save(content);
     }
 }
