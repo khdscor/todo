@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @RestController
@@ -24,7 +25,7 @@ public class Test2Controller {
 
     @GetMapping("/save")
     public ChattingContent test(@RequestParam("name") String name, @RequestParam("age") Long age) {
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
 
         return testRepository.save(content);
     }
@@ -38,7 +39,7 @@ public class Test2Controller {
 
     @GetMapping("/saveR1")
     public String testSave1(@RequestParam("name") String name, @RequestParam("age") Long age) {
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
         Mono<ChattingContent> test = test3Repository.save(content);
 
         return "success";
@@ -46,7 +47,7 @@ public class Test2Controller {
 
     @GetMapping("/saveR2")
     public Mono<ChattingContent> testSave2(@RequestParam("name") String name, @RequestParam("age") Long age) {
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
 
         return test3Repository.save(content);
     }
@@ -54,7 +55,7 @@ public class Test2Controller {
     @GetMapping("/saveR3")
     public String testSave3(@RequestParam("name") String name, @RequestParam("age") Long age) {
         System.out.println("111111111111111111111111");
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
         Mono<ChattingContent> test = test3Repository.save(content);
         test.subscribe(System.out::println);
         System.out.println("2222222222222222222");
@@ -64,7 +65,7 @@ public class Test2Controller {
     @GetMapping("/saveR4")
     public String testSave4(@RequestParam("name") String name, @RequestParam("age") Long age) {
         System.out.println("111111111111111111111111");
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
         Mono<ChattingContent> test = test3Repository.save(content);
 
         test.block();
@@ -76,7 +77,7 @@ public class Test2Controller {
     @GetMapping("/saveR5")
     public Mono<ResponseEntity<ChattingContent>> testSave5(@RequestParam("name") String name, @RequestParam("age") Long age) {
 
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
         Mono<ChattingContent> test = test3Repository.save(content);
         return test.map(ResponseEntity::ok);
     }
@@ -84,9 +85,16 @@ public class Test2Controller {
     @GetMapping("/saveR6")
     public Mono<ResponseEntity<Void>> testSave6(@RequestParam("name") String name, @RequestParam("age") Long age) {
 
-        ChattingContent content = new ChattingContent(name,age);
+        ChattingContent content = new ChattingContent(name, age);
 
         return test3Repository.save(content).then(Mono.just(new ResponseEntity<Void>(HttpStatus.CREATED)));
+    }
+
+    @GetMapping("/findR1")
+    public Mono<ResponseEntity<List<ChattingContent>>> testFind1() {
+
+        return test3Repository.findAll().collectList().map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 }
