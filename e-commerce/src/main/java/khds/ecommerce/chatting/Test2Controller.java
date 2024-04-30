@@ -1,6 +1,8 @@
 package khds.ecommerce.chatting;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,4 +72,21 @@ public class Test2Controller {
         System.out.println("2222222222222222222");
         return "success";
     }
+
+    @GetMapping("/saveR5")
+    public Mono<ResponseEntity<ChattingContent>> testSave5(@RequestParam("name") String name, @RequestParam("age") Long age) {
+
+        ChattingContent content = new ChattingContent(name,age);
+        Mono<ChattingContent> test = test3Repository.save(content);
+        return test.map(ResponseEntity::ok);
+    }
+
+    @GetMapping("/saveR6")
+    public Mono<ResponseEntity<Void>> testSave6(@RequestParam("name") String name, @RequestParam("age") Long age) {
+
+        ChattingContent content = new ChattingContent(name,age);
+
+        return test3Repository.save(content).then(Mono.just(new ResponseEntity<Void>(HttpStatus.CREATED)));
+    }
+
 }
