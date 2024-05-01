@@ -35,8 +35,11 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
 
+	//webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	//mongoDB
 	implementation ('org.springframework.boot:spring-boot-starter-data-mongodb')
+	implementation ('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
 
 	// QueryDSL
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
