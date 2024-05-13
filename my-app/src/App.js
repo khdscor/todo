@@ -23,9 +23,6 @@ function App() {
     stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
     const newMessage = JSON.parse(message.body);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    // if (newMessage.senderSeq !== currentUser.userSeq) {
-    //   // setCustomerSeq(newMessage.senderSeq);
-    // }
       });
     });
     console.log("방 번호", 1);
