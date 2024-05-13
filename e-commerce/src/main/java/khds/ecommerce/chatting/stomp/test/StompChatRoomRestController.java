@@ -1,15 +1,10 @@
 package khds.ecommerce.chatting.stomp.test;
 
 import java.util.List;
-import khds.ecommerce.chatting.stomp.StompChatDTO;
-import khds.ecommerce.chatting.stomp.StompChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StompChatRoomRestController {
 
-//    @Autowired
-//    private StompChatService chatService;
-
     private final SimpMessageSendingOperations template;
 
     // 채팅 리스트 화면
-    // / 로 요청이 들어오면 전체 채팅룸 리스트를 담아서 return
     @GetMapping("/chat/{id}")
     public ResponseEntity<List<ChatMessage>> getChatMessages(@PathVariable Long id){
         ChatMessage test = new ChatMessage(1L, "test", "test");
@@ -35,13 +26,11 @@ public class StompChatRoomRestController {
         return ResponseEntity.ok().body(List.of(test));
     }
 
+    //메세지 송신 및 수신
     @MessageMapping("/message")
-    public ResponseEntity<String> receiveMessage(@RequestBody ChatMessage chat) {
-        // 메시지 저장
-        System.out.println("chat = " + chat);
-
+    public ResponseEntity<Void> receiveMessage(@RequestBody ChatMessage chat) {
         // 메시지를 해당 채팅방 구독자들에게 전송
         template.convertAndSend("/sub/chatroom/1", chat);
-        return ResponseEntity.ok("메시지 전송 완료");
+        return ResponseEntity.ok().build();
     }
 }
