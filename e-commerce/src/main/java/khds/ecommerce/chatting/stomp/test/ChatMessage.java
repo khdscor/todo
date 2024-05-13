@@ -1,4 +1,4 @@
-package khds.ecommerce.chatting.stomp;
+package khds.ecommerce.chatting.stomp.test;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

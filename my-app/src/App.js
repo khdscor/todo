@@ -9,26 +9,23 @@ function App() {
    
   const stompClient = useRef(null);
   const [messages, setMessages] = new useState();
-  //  useEffect(() => {
-  //   connect();
-  //   fetchMessages();
-  //   // 컴포넌트 언마운트 시 웹소켓 연결 해제
-  //   return () => disconnect();
-  // }, [roomId]);
+  const [message, setMessage] = useState("");
 
   // 웹소켓 연결 설정
   const connect = () => {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket("ws://localhost:8080/ws-stomp");
     stompClient.current = Stomp.over(socket);
     stompClient.current.connect({}, () => {
-      // stompClient.current.subscribe(`/sub/chatroom/${roomId}`, (message) => {
-      //   const newMessage = JSON.parse(message.body);
-      //   setMessages((prevMessages) => [...prevMessages, newMessage]);
+      stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
+        console.log("성공!")
+         const newMessage = JSON.parse(message.body);
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-      //   if (newMessage.senderSeq !== currentUser.userSeq) {
-      //     setCustomerSeq(newMessage.senderSeq);
-      //   }
-      // });
+        console.log(newMessage.senderSeq)
+        // if (newMessage.senderSeq !== currentUser.userSeq) {
+        //   // setCustomerSeq(newMessage.senderSeq);
+        // }
+      });
     });
     console.log("방 번호", 1);
   };
@@ -46,16 +43,32 @@ function App() {
   };
 
    useEffect(() => {
-    // connect();
+    connect();
     fetchMessages();
     // // 컴포넌트 언마운트 시 웹소켓 연결 해제
     // return () => disconnect();
   }, []);
 
+  const sendMessage = () => {
+    if (stompClient.current) {
+      const body = {
+        id : 1,
+        name : "테스트1",
+        message : "테스트입니다."
+      };
+      stompClient.current.send(`/pub/message`, {}, JSON.stringify(body));
+      console.log("11111111111111111")
+      setMessage(""); // 입력 필드 초기화
+    }
+  };
+
+
+
   console.log(messages)
   return (
     <div>
       테스트입니다.!
+      <button onClick={()=>{sendMessage()}}>버튼</button>
     </div>
   );
 }
