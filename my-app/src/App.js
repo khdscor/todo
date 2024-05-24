@@ -9,12 +9,11 @@ function App() {
   // 채팅 내용들을 저장할 변수
   const [messages, setMessages] = new useState([]);
    // 사용자 입력을 저장할 변수
-   const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState('');
    // 입력 필드에 변화가 있을 때마다 inputValue를 업데이트
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-
    // 웹소켓 연결 설정
   const connect = () => {
     const socket = new WebSocket("ws://localhost:8080/ws-stomp");
@@ -25,7 +24,6 @@ function App() {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
     });
-    console.log("방 번호", 1);
   };
   // 웹소켓 연결 해제
   const disconnect = () => {
@@ -35,7 +33,7 @@ function App() {
   };
   // 기존 채팅 메시지를 서버로부터 가져오는 함수
   const fetchMessages = () => {
-    return axios.get("http://localhost:8080/chat/1" )
+    return axios.get("http://localhost:8080/find/chat/list/1" )
            .then(response => {setMessages(response.data)});
     
   };
@@ -50,9 +48,10 @@ function App() {
   const sendMessage = () => {
     if (stompClient.current && inputValue) {
       const body = {
-        id : 1,
-        name : "테스트1",
-        message : inputValue
+        roomId : 1,
+        content : inputValue,
+        writerId : 1
+        
       };
       stompClient.current.send(`/pub/message`, {}, JSON.stringify(body));
       setInputValue('');
@@ -61,7 +60,6 @@ function App() {
 
   return (
     <div>
-      {/* 리스트 출력 */}
       <ul>
         <div>
           {/* 입력 필드 */}
@@ -70,11 +68,12 @@ function App() {
         value={inputValue}
         onChange={handleInputChange}
       />
-      {/* 추가 버튼 */}
+      {/* 메시지 전송, 메시지 리스트에 추가 */}
       <button onClick={sendMessage}>입력</button>
         </div>
+        {/* 메시지 리스트 출력 */}
         {messages.map((item, index) => (
-          <div key={index} className="list-item">{item.message}</div>
+          <div key={index} className="list-item">{item.content}</div>
         ))}
       </ul>
     </div>

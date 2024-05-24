@@ -1,7 +1,6 @@
 package khds.ecommerce.repository;
 
 import static khds.ecommerce.QArticle.article;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -20,16 +19,16 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
     }
 
     @Override
-    public List<Article> findByTitleUnder10() {
-        BooleanExpression expression = article.title.length().loe(10);
+    public List<Article> findByTitleUnder3() {
+        BooleanExpression expression = article.title.length().loe(3);
         return jpaQueryFactory.selectFrom(article).where(expression).fetch();
     }
 
     @Override
-    public List<ArticleJPAResponse> findDtoByTitleUnder10() {
-        BooleanExpression expression = article.title.length().loe(10);
+    public List<ArticleJPAResponse> findDtoByTitleUnder3() {
+        BooleanExpression expression = article.title.length().loe(3);
         return jpaQueryFactory.select(
-                new QArticleJPAResponse(article.id, article.title, article.title))
+                new QArticleJPAResponse(article.id, article.title, article.content))
             .from(article).where(expression).fetch();
     }
 }

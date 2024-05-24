@@ -6,7 +6,7 @@ import khds.ecommerce.ArticleJPAResponse;
 
 public interface ArticleCustomRepository {
 
-    List<Article> findByTitleUnder10();
+    List<Article> findByTitleUnder3();
 
-    List<ArticleJPAResponse> findDtoByTitleUnder10();
+    List<ArticleJPAResponse> findDtoByTitleUnder3();
 }
