@@ -24,20 +24,20 @@ public class TestController {
     }
 
     @GetMapping("/find")
-    public Article test2(){
-        List<Article> article = articleRepository.findAll();
-        return article.get(0);
+    public List<Article> test2(){
+        List<Article> articles = articleRepository.findAll();
+        return articles;
     }
 
     @GetMapping("/find2")
     public List<Article> test3(){
-        List<Article> articles = articleRepository.findByTitleUnder10();
+        List<Article> articles = articleRepository.findByTitleUnder3();
         return articles;
     }
 
     @GetMapping("/find3")
     public List<ArticleJPAResponse> test4(){
-        List<ArticleJPAResponse> articles = articleRepository.findDtoByTitleUnder10();
+        List<ArticleJPAResponse> articles = articleRepository.findDtoByTitleUnder3();
         return articles;
     }
 }
