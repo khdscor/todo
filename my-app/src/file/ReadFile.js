@@ -18,6 +18,21 @@ function File() {
         });
     }
 
+    const downloadFile =  (filename) => {
+        const url = `http://localhost:8080/download/${filename}`;
+        fetch(url)
+        .then(response => {
+            // 파일 다운로드 링크 생성
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(new Blob([response.data]));
+            downloadLink.setAttribute('download', filename);
+            downloadLink.click();
+        })
+        .catch(error => {
+            console.error('Error downloading file:', error);
+        });
+    }
+    
     return (
         <div>
             <h2>사진 목록</h2>
@@ -33,6 +48,7 @@ function File() {
                             }}
                         />
                         <p>{item.filename}</p>
+                        <button onClick={() => downloadFile(item.filename)}>다운로드</button>
                     </div>
                 )
             }) : ""}

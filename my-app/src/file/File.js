@@ -65,7 +65,6 @@ function File() {
 
     return (
         <div>
-            
             <Link 
             to={`/readfile`}
             style={{ textDecoration: 'none'}}
