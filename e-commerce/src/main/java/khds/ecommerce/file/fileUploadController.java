@@ -1,8 +1,14 @@
 package khds.ecommerce.file;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -13,6 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,21 +67,27 @@ public class fileUploadController {
 
 
     @GetMapping("/download/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName)
-        throws MalformedURLException {
-        try {
-            Path filePath = Paths.get(filepath).resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName, HttpServletResponse response) {
+        Path filePath = Paths.get(filepath).resolve(fileName).normalize();
+        byte[] fileContent;
 
-            if (resource.exists() && resource.isReadable()) {
-                return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + StringUtils.cleanPath(resource.getFilename()) + "\"")
-                    .body(resource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UrlResource(filepath + "error.jpg"));
+        try {
+            fileContent = Files.readAllBytes(filePath);
+
+            String cleanFileName = StringUtils.cleanPath(fileName);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", cleanFileName);
+
+            return ResponseEntity.ok()
+                .headers(headers)
+                .body(fileContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
         }
     }
+
+
+
 }
