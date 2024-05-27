@@ -27,28 +27,27 @@ function File() {
     }
 
     const WriteBoard = () => {
-
-        const fd = new FormData();
-        for(let i=0 ; i<imgFile.length ; i++) {
-            fd.append("file", imgFile[i]);
+        if(imgFile){
+            const fd = new FormData();
+            for(let i=0 ; i<imgFile.length ; i++) {
+                fd.append("file", imgFile[i]);
+            }
+            axios.post("http://localhost:8080/image", fd)
+                .then(response => {
+                    if(response.data) {
+                        console.log(response.data)
+                        setImgFile(null);
+                        setImgBase64([]);
+                        alert("업로드 완료!");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                    alert("실패!");
+                })
+        } else{
+            alert("파일을 1개 이상 넣어주세요!")
         }
-        fd.append(
-            "comment",
-            "hello world"
-        );
-        axios.post("http://localhost:8080/image", fd)
-            .then(response => {
-                if(response.data) {
-                    console.log(response.data)
-                    setImgFile(null);
-                    setImgBase64([]);
-                    alert("업로드 완료!");
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-                alert("실패!");
-            })
     }
 
 

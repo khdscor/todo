@@ -3,8 +3,11 @@ package khds.ecommerce.file;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,28 +22,25 @@ public class fileUploadController {
     private final FileRepository fileRepository;
 
     @PostMapping("image")
-    public FileEntity uploadImage(HttpServletRequest request,
-        @RequestParam(value="file", required = false) MultipartFile[] files,
-        @RequestParam(value="comment", required = false) String comment) {
+    public ResponseEntity<List<FileEntity>> uploadImage(@RequestParam(value = "file") MultipartFile[] files) {
+        List<FileEntity> entities = new ArrayList<>();
+        for (int i = 0; i < files.length; i++) {
+            String originFileName = files[i].getOriginalFilename();
+            long fileSize = files[i].getSize();
+            String safeFile = System.currentTimeMillis() + originFileName;
 
-        String FileNames = "";
+            File f1 = new File(filepath + safeFile);
+            try {
+                files[i].transferTo(f1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        String originFileName = files[0].getOriginalFilename();
-        long fileSize = files[0].getSize();
-        String safeFile = System.currentTimeMillis() + originFileName;
-
-        File f1 = new File(filepath + safeFile);
-        try {
-            files[0].transferTo(f1);
-        } catch (IOException e) {
-            e.printStackTrace();
+            entities.add(FileEntity.builder()
+                .filename(safeFile)
+                .newDate(new Date())
+                .build());
         }
-
-        final FileEntity file = FileEntity.builder()
-            .filename(safeFile)
-            .newDate(new Date())
-            .build();
-
-        return fileRepository.save(file);
+        return ResponseEntity.ok().body(fileRepository.saveAll(entities));
     }
 }
