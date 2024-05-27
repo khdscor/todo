@@ -1,6 +1,5 @@
 package khds.ecommerce.file;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,5 +42,10 @@ public class fileUploadController {
                 .build());
         }
         return ResponseEntity.ok().body(fileRepository.saveAll(entities));
+    }
+
+    @GetMapping("find/files")
+    public ResponseEntity<List<FileEntity>> findFiles() {
+        return ResponseEntity.ok().body(fileRepository.findAll());
     }
 }

@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import axios from "axios";
 
 function File() {
@@ -64,6 +65,13 @@ function File() {
 
     return (
         <div>
+            
+            <Link 
+            to={`/readfile`}
+            style={{ textDecoration: 'none'}}
+          > 
+            <h2>업로드한 파일 보기</h2>
+          </Link>
             <h2>사진 업로드</h2>
             <input type="file" id="fileInput" onChange={handleChangeFile} multiple  style={{ display: 'none' }}/>
             <button onClick={handleButtonClick}>파일 선택</button>
