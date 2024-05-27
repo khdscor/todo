@@ -28,12 +28,11 @@ function File() {
         <div>
             <h2>사진 목록</h2>
             {imgFile ? imgFile.map((item) => {
-                const encodedFileName = encodeURIComponent(item.filename);
                 return (
                     <div key={item.pid}>
                         <img
-                            src={"http://localhost:8080/images/"+encodedFileName}
-                            alt={"img"+item.filename}
+                            src={"http://localhost:8080/images/" + item.filename}
+                            alt={`img${item.filename}`}
                             style={{width:"200px", height:"150px"}}
                             onError={(e) => {
                                 e.target.src = "/noImage.png"; // 이미지 로딩 실패 시 기본 이미지로 교체
