@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from "axios";
 
 function File() {
-    const [imgBase64, setImgBase64] = useState([]);
     const [imgFile, setImgFile] = useState(null);
-    console.log(imgFile)
     useEffect(() => {
         readImages();
     }, [])
@@ -12,9 +10,7 @@ function File() {
     const readImages = async () => {
         return axios.get("http://localhost:8080/find/files" )
            .then(response => {
-                console.log('======= 이미지 목록 조회 성공 =======')
                 setImgFile(response.data);
-                console.log(response.data);
         });
     }
 
@@ -32,10 +28,11 @@ function File() {
         <div>
             <h2>사진 목록</h2>
             {imgFile ? imgFile.map((item) => {
+                const encodedFileName = encodeURIComponent(item.filename);
                 return (
                     <div key={item.pid}>
                         <img
-                            src={"http://localhost:8080/images/"+item.filename}
+                            src={"http://localhost:8080/images/"+encodedFileName}
                             alt={"img"+item.filename}
                             style={{width:"200px", height:"150px"}}
                             onError={(e) => {

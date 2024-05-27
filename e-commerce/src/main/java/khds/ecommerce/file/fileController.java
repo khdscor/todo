@@ -3,9 +3,6 @@ package khds.ecommerce.file;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -15,10 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -31,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-public class fileUploadController {
+public class fileController {
 
     final String filepath = "C:/Users/khdsc/IdeaProjects/e-commerce/e-commerce/src/main/resources/static/images/";
 
@@ -44,8 +38,8 @@ public class fileUploadController {
             String originFileName = files[i].getOriginalFilename();
             long fileSize = files[i].getSize();
             String safeFile = System.currentTimeMillis() + originFileName;
-
-            File f1 = new File(filepath + safeFile);
+            String encodedFileName = URLEncoder.encode(safeFile, StandardCharsets.UTF_8);
+            File f1 = new File(filepath + encodedFileName);
             try {
                 files[i].transferTo(f1);
             } catch (IOException e) {
@@ -68,13 +62,14 @@ public class fileUploadController {
 
     @GetMapping("/download/{fileName}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName, HttpServletResponse response) {
-        Path filePath = Paths.get(filepath).resolve(fileName).normalize();
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+        Path filePath = Paths.get(filepath).resolve(encodedFileName).normalize();
         byte[] fileContent;
 
         try {
             fileContent = Files.readAllBytes(filePath);
 
-            String cleanFileName = StringUtils.cleanPath(fileName);
+            String cleanFileName = StringUtils.cleanPath(encodedFileName);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", cleanFileName);
@@ -87,7 +82,4 @@ public class fileUploadController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 }
