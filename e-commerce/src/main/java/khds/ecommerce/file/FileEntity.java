@@ -28,4 +28,9 @@ public class FileEntity {
 
     @Column(name = "create_date")
     private Date newDate;
+
+    public FileEntity(String filename, Date newDate) {
+        this.filename = filename;
+        this.newDate = newDate;
+    }
 }
