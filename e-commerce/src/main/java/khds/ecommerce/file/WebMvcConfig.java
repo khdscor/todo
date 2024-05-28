@@ -15,13 +15,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("file:src/main/resources/static/")
+        registry.addResourceHandler("/file/**")
+                .addResourceLocations("file:src/main/resources/static/images/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
                     @Override
                     protected Resource getResource(String resourcePath, Resource location) throws IOException {
-                        return location.createRelative(URLEncoder.encode(resourcePath, StandardCharsets.UTF_8.name()));
+                        String urlQueryString = resourcePath.replace("%20", "+");
+                        return location.createRelative(URLEncoder.encode(urlQueryString, StandardCharsets.UTF_8));
                     }
                 });
     }

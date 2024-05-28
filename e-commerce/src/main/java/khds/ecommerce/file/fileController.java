@@ -1,6 +1,5 @@
 package khds.ecommerce.file;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -32,22 +31,31 @@ public class fileController {
     private final FileRepository fileRepository;
 
     @PostMapping("image")
-    public ResponseEntity<List<FileEntity>> uploadImage(@RequestParam(value = "file") MultipartFile[] files) {
+    public ResponseEntity<List<FileEntity>> uploadImage(
+        @RequestParam(value = "file") MultipartFile[] files) {
         List<FileEntity> entities = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
-            String originFileName = files[i].getOriginalFilename();
-            long fileSize = files[i].getSize();
-            String safeFile = System.currentTimeMillis() + originFileName;
-            String encodedFileName = URLEncoder.encode(safeFile, StandardCharsets.UTF_8);
-            File f1 = new File(filepath + encodedFileName);
+            String fileName = files[i].getOriginalFilename();
+            int lastIndexOfDot = fileName.lastIndexOf(".");
+            String name = fileName.substring(0, lastIndexOfDot);
+            String extension = fileName.substring(lastIndexOfDot);
+            int fileNumber = 1;
+            String fileSequence = "";
+            while (new File(filepath + URLEncoder.encode(name, StandardCharsets.UTF_8)
+                    + fileSequence + extension).exists()) {
+                fileSequence = "(" + fileNumber + ")";
+                fileNumber++;
+            }
+            File f1 = new File(filepath + URLEncoder.encode(name, StandardCharsets.UTF_8)
+                    + fileSequence + extension);
             try {
                 files[i].transferTo(f1);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("File not saved");
             }
 
             entities.add(FileEntity.builder()
-                .filename(safeFile)
+                .filename(name+ fileSequence + extension)
                 .newDate(new Date())
                 .build());
         }
@@ -61,7 +69,7 @@ public class fileController {
 
 
     @GetMapping("/download/{fileName}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName, HttpServletResponse response) {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName) {
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
         Path filePath = Paths.get(filepath).resolve(encodedFileName).normalize();
         byte[] fileContent;

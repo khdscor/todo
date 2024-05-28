@@ -31,7 +31,7 @@ function File() {
                 return (
                     <div key={item.pid}>
                         <img
-                            src={"http://localhost:8080/images/" + item.filename}
+                            src={"http://localhost:8080/file/" + item.filename}
                             alt={`img${item.filename}`}
                             style={{width:"200px", height:"150px"}}
                             onError={(e) => {
