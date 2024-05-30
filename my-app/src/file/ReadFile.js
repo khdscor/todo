@@ -1,21 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
+import './ReadFile.css';
 
 function File() {
-    const [imgFile, setImgFile] = useState(null);
+    const [files, setFiles] = useState(null);
     useEffect(() => {
-        readImages();
+        readFiles();
     }, [])
     
-    const readImages = async () => {
-        return axios.get("http://localhost:8080/find/files" )
+    const readFiles = async () => {
+        return axios.get("http://localhost:8080/file/find/all" )
            .then(response => {
-                setImgFile(response.data);
+                setFiles(response.data);
         });
     }
 
     const downloadFile =  (filename) => {
-    const url = `http://localhost:8080/download/${filename}`;
+    const url = `http://localhost:8080/file/download/${filename}`;
 
     // 파일 다운로드 링크 생성
     const downloadLink = document.createElement('a');
@@ -25,24 +26,30 @@ function File() {
     }
     
     return (
-        <div>
-            <h2>사진 목록</h2>
-            {imgFile ? imgFile.map((item) => {
-                return (
-                    <div key={item.pid}>
-                        <img
-                            src={"http://localhost:8080/file/" + item.filename}
-                            alt={`img${item.filename}`}
-                            style={{width:"200px", height:"150px"}}
-                            onError={(e) => {
-                                e.target.src = "/noImage.png"; // 이미지 로딩 실패 시 기본 이미지로 교체
-                            }}
-                        />
-                        <p>{item.filename}</p>
-                        <button onClick={() => downloadFile(item.filename)}>다운로드</button>
-                    </div>
-                )
-            }) : ""}
+        <div className="file-list-container">
+            <h2 className="title">파일 목록</h2>
+            <div className="file-list">
+                {/* 서버에 업로드된 파일들을 가져온 후 화면에 표시(이름, 이미지) */}
+                {files ? files.map((item) => (
+                <div key={item.pid} className="file-item">
+                    <img
+                    // src는 정적 리소스 경로
+                    src={`http://localhost:8080/file/${item.filename}`}
+                    alt={`img${item.filename}`}
+                    className="file-image"
+                    // 이미지 파일이 아닐 시 기본 이미지로 표시
+                    onError={(e) => {
+                        e.target.src = "/noImage.png"; 
+                    }}
+                    />
+                    <p className="file-name">{item.filename}</p>
+                    {/* 파일 별 다운로드 버튼 노출, 클릭 시 다운로드 진행 */}
+                    <button onClick={() => downloadFile(item.filename)} className="button download-button">
+                    다운로드
+                    </button>
+                </div>
+                )) : <p>파일이 없습니다.</p>}
+            </div>
         </div>
     );
 }

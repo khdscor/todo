@@ -21,7 +21,7 @@ public class FileEntity {
 
     @Id // primary key임을 명시
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long pid;
+    private long id;
 
     @Column(nullable = false, unique = true, length = 1000)
     private String filename;

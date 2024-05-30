@@ -10,8 +10,8 @@ create table article_table (
 );
 
 create table file (
-    pid bigint not null auto_increment,
+    id bigint not null auto_increment,
     filename varchar(100) not null,
     create_date datetime(6),
-    primary key (pid)
+    primary key (id)
 );

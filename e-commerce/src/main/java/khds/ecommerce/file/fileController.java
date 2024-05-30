@@ -20,10 +20,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequestMapping("file")
 @RestController
 @RequiredArgsConstructor
 public class fileController {
@@ -33,8 +35,8 @@ public class fileController {
 
     private final FileRepository fileRepository;
 
-    @PostMapping("image")
-    public ResponseEntity<List<FileEntity>> uploadImage(@RequestParam(value = "file") MultipartFile[] files) {
+    @PostMapping("/upload")
+    public ResponseEntity<List<FileEntity>> uploadFile(@RequestParam(value = "file") MultipartFile[] files) {
         List<FileEntity> entities = new ArrayList<>();
         for (MultipartFile file : files) {
             // 파일 이름을 생성, 중복 시 번호 증가 ex. (1), (2)...
@@ -72,15 +74,18 @@ public class fileController {
         }
     }
 
-    @GetMapping("find/files")
+    @GetMapping("find/all")
     public ResponseEntity<List<FileEntity>> findFiles() {
         return ResponseEntity.ok().body(fileRepository.findAll());
     }
 
     @GetMapping("/download/{fileName}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName) {
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+        // 파일 읽어오기
         byte[] fileContent = readFileContent(fileName);
+        // 파일 인코딩
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+        // 파일 다운로드 응답
         return createResponseEntity(encodedFileName, fileContent);
     }
 
