@@ -17,11 +17,10 @@ feat#2
 feat#3
 1. WebSocket을 이용한 채팅서버 구현
 2. Stomp 사용
-3. ftp를 통한 파일, 이미지 s3 저장
 
 feat#4
 1. mongoDB 연결 및 save, find, 동기 접근, webflux를 통한 비동기 접근
 
 feat#5
 1. 존재하지 않는 url 접근 시(404 status) 예외 처리
-2.  파일 업로드, 다우로드 구현(채팅방과 별도 구현, DB에 바이트 코드로 저장)
+2.  파일 업로드, 다우로드 구현
